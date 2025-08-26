@@ -61,9 +61,74 @@ foreach ($alunos as $aluno) {
 }
 
 $html .= "
-  </table>
+  </table>";
+
+//Exercício 3 - Matriz Original e Transposta
+$matriz = [];
+for ($i = 0; $i < 3; $i++){
+  for ($j = 0; $j < 3; $j++) {
+    $matriz[$i][$j] = rand(0, 99);
+  }
+}
+
+function transpor($m){
+  $t = [];
+  for ($i = 0; $i < 3; $i++){
+    for($j = 0; $j < 3; $j++){
+      $t[$j][$i] = $m[$i][$j];
+    }
+  }
+  return $t;
+}
+
+$transposta = transpor($matriz);
+
+$html .= "<h1>Exercício 3 - Matriz Original</h1>
+<table border='1' cellpadding='5' cellspacing='0'>";
+foreach ($matriz as $linha) {
+  $html .= "<tr>";
+  foreach ($linha as $valor){
+    $html .= "<td>$valor</td>";
+  }
+  $html .= "</tr>";
+}
+$html .= "</table>";
+
+
+$html .= "<h1>Exercício 3 - Matriz Transposta</h1>
+<table border='1' cellpadding='5' cellspacing='0'>";
+foreach ($transposta as $linha) {
+  $html .= "<tr>";
+  foreach ($linha as $valor){
+    $html .= "<td>$valor</td>";
+  }
+  $html .= "</tr>";
+}
+$html .= "</table>";
+
+$html .= "
+</body>
+</html>";
+
+//Exercício 4 - Formulário
+
+$html .= " <h1> Exercício 4 - Formulário</h1>
+<form method='GET' action=''>
+  <label for='nome' > Digite seu nome:</label>
+  <input type='text' name='nome' id='nome' required>
+  <input type='submit' value='Enviar'>
+</form>
+";
+
+if (isset($_GET['nome']) && !empty($_GET['nome'])){
+  $nome = htmlspecialchars($_GET['nome']);
+  $html .= "<h2> Olá, $nome! Seja bem-vindo. </h2>";
+}
+
+$html .= "
 </body>
 </html>";
 
 echo $html;
+
 ?>

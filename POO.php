@@ -1,4 +1,5 @@
 <?php
+// Arthur Vital Fontana
 session_start();
 
 // --- Classes ---
@@ -59,21 +60,19 @@ class Hospedagem {
         $this->conta = $conta;
     }
 
-    // Calcula número de diárias
     public function calcularDiarias() {
         $entrada = new DateTime($this->dataEntrada);
         $saida = new DateTime($this->dataSaida);
         $diff = $saida->diff($entrada)->days;
-        return max($diff,1); // pelo menos 1 diária
+        return max($diff,1);
     }
 
-    // Calcula valor total incluindo diárias
     public function calcularValorTotal() {
         return $this->calcularDiarias() * $this->aposento->valor + $this->conta->valorTotal;
     }
 }
 
-// --- Inicialização de dados ---
+// --- Inicialização ---
 if (!isset($_SESSION['aposentos'])) {
     $_SESSION['aposentos'] = [
         new Aposento(1, 200, "Solteiro", 101),
@@ -91,7 +90,6 @@ if (!isset($_SESSION['consumosDisponiveis'])) $_SESSION['consumosDisponiveis'] =
     ["descricao"=>"Serviço de quarto","valor"=>40],
 ];
 
-// --- Referências ---
 $aposentos = &$_SESSION['aposentos'];
 $hospedes = &$_SESSION['hospedes'];
 $hospedagens = &$_SESSION['hospedagens'];
@@ -145,10 +143,20 @@ if (isset($_POST['encerrar'])) {
         if ($h->codigo == $codigoHospedagem && !$h->conta->pago) {
             $h->conta->pago = true;
             $h->aposento->ocupado = false;
+            $h->dataSaida = date("Y-m-d");
             $valorTotal = $h->calcularValorTotal();
             echo "<p>Conta encerrada! Valor total a pagar: R$ {$valorTotal}</p>";
+            echo "<p>Quarto {$h->aposento->descricao} liberado.</p>";
         }
     }
+}
+
+// --- Limpar histórico ---
+if (isset($_POST['limparHistorico'])) {
+    foreach ($aposentos as $ap) $ap->ocupado = false; // libera todos os quartos
+    $_SESSION['hospedagens'] = [];
+    $_SESSION['contas'] = [];
+    echo "<p>Histórico de hospedagens limpo!</p>";
 }
 ?>
 
@@ -192,10 +200,40 @@ if (isset($_POST['encerrar'])) {
 <?php foreach ($aposentos as $ap) if (!$ap->ocupado) echo "<li>{$ap->numero} - {$ap->descricao} (R$ {$ap->valor})</li>"; ?>
 </ul>
 
-<h2>Hospedagens Ativas</h2>
-<ul>
-<?php foreach ($hospedagens as $h) if (!$h->conta->pago) {
-    echo "<li>Cliente #{$h->hospede->codigo} - {$h->hospede->nome} - Quarto {$h->aposento->descricao} | Entrada: {$h->dataEntrada}, Saída: {$h->dataSaida} | Valor parcial: R$ {$h->calcularValorTotal()}</li>";
-} ?>
-</ul>
+<h2>Todos os Hóspedes</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Código Cliente</th>
+        <th>Nome</th>
+        <th>Quarto</th>
+        <th>Número Quarto</th>
+        <th>Data Entrada</th>
+        <th>Data Saída</th>
+        <th>Valor Total</th>
+        <th>Status</th>
+    </tr>
+    <?php 
+    foreach ($hospedagens as $hospedagem) {
+        // Atualiza ocupação caso a conta esteja paga
+        if ($hospedagem->conta->pago) $hospedagem->aposento->ocupado = false;
+        $status = $hospedagem->conta->pago ? "Pago" : "Em aberto";
+        $valorTotal = $hospedagem->calcularValorTotal();
+        echo "<tr>
+                <td>{$hospedagem->hospede->codigo}</td>
+                <td>{$hospedagem->hospede->nome}</td>
+                <td>{$hospedagem->aposento->descricao}</td>
+                <td>{$hospedagem->aposento->numero}</td>
+                <td>{$hospedagem->dataEntrada}</td>
+                <td>{$hospedagem->dataSaida}</td>
+                <td>R$ {$valorTotal}</td>
+                <td>{$status}</td>
+              </tr>";
+    }
+    ?>
+    
+</table>
 
+<h2>Limpar Histórico</h2>
+<form method="post">
+    <input type="submit" name="limparHistorico" value="Limpar Histórico">
+</form>

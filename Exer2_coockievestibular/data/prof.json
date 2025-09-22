@@ -1,0 +1,24 @@
+{
+    "pessoais": {
+        "nome": "Professor Luciano",
+        "cpf": "82761510003",
+        "nascimento": "1989-11-13",
+        "telefone": "18992168084",
+        "email": "teste@gmail.com"
+    },
+    "endereco": {
+        "cep": "14079185",
+        "logradouro": "Rua Carlos Saad Gallo",
+        "numero": "329",
+        "complemento": "",
+        "bairro": "Jardim Professor Antônio Palocci",
+        "cidade": "Ribeirão Preto",
+        "uf": "SP"
+    },
+    "cursos": {
+        "opcao1": "Medicina",
+        "opcao2": "Arquitetura e Urbanismo",
+        "opcao3": "Enfermagem",
+        "turno": "Integral"
+    }
+}

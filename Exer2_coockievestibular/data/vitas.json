@@ -1,0 +1,24 @@
+{
+    "pessoais": {
+        "nome": "Arthur Fontana",
+        "cpf": "59623440065",
+        "nascimento": "2005-06-06",
+        "telefone": "18974820114",
+        "email": "arthurteste@gmail.com"
+    },
+    "endereco": {
+        "cep": "14270970",
+        "logradouro": "Avenida Rio Branco",
+        "numero": "413",
+        "complemento": "",
+        "bairro": "Centro",
+        "cidade": "Santa Rosa de Viterbo",
+        "uf": "SP"
+    },
+    "cursos": {
+        "opcao1": "Engenharia de Software",
+        "opcao2": "Sistemas de Informação",
+        "opcao3": "Ciência de Dados",
+        "turno": "Noite"
+    }
+}
